@@ -6,10 +6,17 @@ import pl.ps.creditapp.core.model.Person;
 
 public class IncomeCalculator {
     private static final Logger log = LoggerFactory.getLogger(IncomeCalculator.class);
+
     public int calculate(Person person) {
         double incomePerFamilyMember = person.getIncomePerFamilyMember();
         int pointsForIncome = (int) (incomePerFamilyMember / 1000) * 100;
         log.info("Income per family member = "+incomePerFamilyMember+". "+ScoringUtils.getPointsString(pointsForIncome));
+
+        if(person.getFinanceData().getSourcesOfIncome().length > 1){
+            pointsForIncome += 100;
+            log.info("Extra points for source "+person.getFinanceData().getSourcesOfIncome().length+" sources of income "+ScoringUtils.getPointsString(100));
+        }
+
         return pointsForIncome;
     }
 }

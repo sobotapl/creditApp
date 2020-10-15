@@ -1,7 +1,6 @@
 package pl.ps.creditapp.client;
 
 import pl.ps.creditapp.core.model.*;
-import pl.ps.creditapp.core.model.*;
 
 import java.util.Scanner;
 
@@ -31,8 +30,21 @@ public class ConsoleReader {
         System.out.println("Enter your phone number:");
         String phoneNumber = in.next();
 
-        System.out.println("Enter total monthly income in PLN");
-        double income = in.nextDouble();
+        System.out.println("How many sources of income do you have? ");
+        int numberOfSourcesOfIncome = in.nextInt();
+
+        SourcesOfIncome[] sourcesOfIncomes = new SourcesOfIncome[numberOfSourcesOfIncome];
+        for(int i = 1; i <= sourcesOfIncomes.length; i++){
+            System.out.println("Ener type of source of income " + i + " (EMPLOYMENT_CONTRACT | SELF_EMPLOYMENT | RETIREMENT):");
+            IncomeType incomeType = IncomeType.valueOf(in.next());
+            System.out.println("Ener net monthly income of source income " + i);
+            double netMonthlyIncome = in.nextDouble();
+
+            SourcesOfIncome sourceOfIncome = new SourcesOfIncome(incomeType, netMonthlyIncome);
+            sourcesOfIncomes[i-1] = sourceOfIncome;
+
+
+        }
 
         System.out.println("Enter number of family dependants (including applicant):");
         int numOfDependant = in.nextInt();
@@ -46,11 +58,12 @@ public class ConsoleReader {
         System.out.println("Enter loan period (in years)");
         int period = in.nextInt();
 
-        PersonalData personalData = new PersonalData(name, lastName, mothersMaidenName, income, maritalStatus, education, numOfDependant);
+        PersonalData personalData = new PersonalData(name, lastName, mothersMaidenName, maritalStatus, education, numOfDependant);
         ContactData contactData = new ContactData(email, phoneNumber);
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(purposeOfLoanType,purposeOfLoanAmount, period);
+        FinanceData financeData = new FinanceData(sourcesOfIncomes);
 
 
-        return new CreditApplication(new Person(personalData,contactData), purposeOfLoan);
+        return new CreditApplication(new Person(personalData,contactData, financeData), purposeOfLoan);
     }
 }

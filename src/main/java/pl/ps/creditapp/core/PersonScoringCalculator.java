@@ -9,6 +9,7 @@ import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
 
 public class PersonScoringCalculator {
     private static final Logger log = LoggerFactory.getLogger(PersonScoringCalculator.class);
+
     private final EducationCalculator educationCalculator;
     private final MaritalStatusCalculator maritalStatusCalculator;
     private final IncomeCalculator incomeCalculator;

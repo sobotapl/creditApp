@@ -3,10 +3,12 @@ package pl.ps.creditapp.core.model;
 public class Person {
     private final PersonalData personalData;
     private final ContactData contactData;
+    private final FinanceData financeData;
 
-    public Person(PersonalData personalData, ContactData contactData) {
+    public Person(PersonalData personalData, ContactData contactData, FinanceData financeData) {
         this.personalData = personalData;
         this.contactData = contactData;
+        this.financeData = financeData;
     }
 
     public PersonalData getPersonalData() {
@@ -17,7 +19,15 @@ public class Person {
         return contactData;
     }
 
+    public FinanceData getFinanceData() {
+        return financeData;
+    }
+
     public double getIncomePerFamilyMember(){
-        return this.getPersonalData().getTotalMonthlyIncomeInPln() / this.getPersonalData().getNumOfDependants();
+        double totalMonthlyIncome = 0;
+        for(SourcesOfIncome sourcesOfIncome : financeData.getSourcesOfIncome()){
+            totalMonthlyIncome += sourcesOfIncome.getNetMonthlyIncome();
+        }
+        return totalMonthlyIncome / this.getPersonalData().getNumOfDependants();
     }
 }
