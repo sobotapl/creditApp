@@ -25,7 +25,7 @@ public class Person {
 
     public double getIncomePerFamilyMember(){
         double totalMonthlyIncome = 0;
-        for(SourcesOfIncome sourcesOfIncome : financeData.getSourcesOfIncome()){
+        for(SourceOfIncome sourcesOfIncome : financeData.getSourcesOfIncome()){
             totalMonthlyIncome += sourcesOfIncome.getNetMonthlyIncome();
         }
         return totalMonthlyIncome / this.getPersonalData().getNumOfDependants();

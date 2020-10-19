@@ -1,12 +1,12 @@
 package pl.ps.creditapp.core.model;
 
-public class SourcesOfIncome {
+public class SourceOfIncome {
 
     private final IncomeType incomeType;
     private final double netMonthlyIncome;
 
 
-    public SourcesOfIncome(IncomeType incomeType, double netMonthlyIncome) {
+    public SourceOfIncome(IncomeType incomeType, double netMonthlyIncome) {
         this.incomeType = incomeType;
         this.netMonthlyIncome = netMonthlyIncome;
     }

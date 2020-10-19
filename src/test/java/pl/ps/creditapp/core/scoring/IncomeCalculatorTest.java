@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import pl.ps.creditapp.core.model.IncomeType;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.model.PersonTestFactory;
-import pl.ps.creditapp.core.model.SourcesOfIncome;
+import pl.ps.creditapp.core.model.SourceOfIncome;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +17,7 @@ class IncomeCalculatorTest {
     @DisplayName("should return 100 points for each 1000 zł for family member.")
     public void test1() {
         //given
-        SourcesOfIncome s1 = new SourcesOfIncome(IncomeType.SELF_EMPLOYMENT, 5000.00);
+        SourceOfIncome s1 = new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 5000.00);
         Person person = PersonTestFactory.create(2, s1);
         //when
         int scoring = cut.calculate(person);
@@ -29,8 +29,8 @@ class IncomeCalculatorTest {
     @DisplayName("should return plus 200 points where there is more than 1 source of income.")
     public void test2() {
         //given
-        SourcesOfIncome s1 = new SourcesOfIncome(IncomeType.SELF_EMPLOYMENT, 4000.00);
-        SourcesOfIncome s2 = new SourcesOfIncome(IncomeType.RETIREMENT, 1000.00);
+        SourceOfIncome s1 = new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 4000.00);
+        SourceOfIncome s2 = new SourceOfIncome(IncomeType.RETIREMENT, 1000.00);
         Person person = PersonTestFactory.create(2, s1, s2); //varargs
         //when
         int scoring = cut.calculate(person);

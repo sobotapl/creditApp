@@ -2,13 +2,13 @@ package pl.ps.creditapp.core.model;
 
 public class FinanceData {
 
-    private final SourcesOfIncome[] sourcesOfIncome;
+    private final SourceOfIncome[] sourcesOfIncome;
 
-    public FinanceData(SourcesOfIncome... sourcesOfIncome) {
+    public FinanceData(SourceOfIncome... sourcesOfIncome) {
         this.sourcesOfIncome = sourcesOfIncome;
     }
 
-    public SourcesOfIncome[] getSourcesOfIncome() {
+    public SourceOfIncome[] getSourcesOfIncome() {
         return sourcesOfIncome;
     }
 }

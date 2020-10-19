@@ -2,7 +2,7 @@ package pl.ps.creditapp.core.model;
 
 public class PersonTestFactory {
 
-    public static Person create(int numOfDependants, SourcesOfIncome... sourcesOfIncomes) {
+    public static Person create(int numOfDependants, SourceOfIncome... sourcesOfIncomes) {
         PersonalData personalData = new PersonalData("test", "test", "test", MaritalStatus.SINGLE, Education.MIDDLE, numOfDependants);
         return new Person(personalData, null, new FinanceData(sourcesOfIncomes));
     }
@@ -24,6 +24,6 @@ public class PersonTestFactory {
 
     public static Person create(double totalMonthlyIncomeInPln, int numOfDependants, Education education, MaritalStatus maritalStatus) {
         PersonalData personalData = new PersonalData("test", "test", "test",  maritalStatus, education, numOfDependants);
-        return new Person(personalData, null, new FinanceData((new SourcesOfIncome(IncomeType.SELF_EMPLOYMENT, totalMonthlyIncomeInPln))));
+        return new Person(personalData, null, new FinanceData((new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, totalMonthlyIncomeInPln))));
     }
 }

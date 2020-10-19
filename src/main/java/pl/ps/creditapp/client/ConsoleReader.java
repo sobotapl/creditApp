@@ -1,5 +1,6 @@
 package pl.ps.creditapp.client;
 
+import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.model.*;
 
 import java.util.Scanner;
@@ -9,49 +10,18 @@ public class ConsoleReader {
     public CreditApplication readInputParameters() {
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Enter your name");
-        String name = in.next();
-
-        System.out.println("Enter your last name");
-        String lastName = in.next();
-
-        System.out.println("Enter your mothers maiden name");
-        String mothersMaidenName = in.next();
-
+        String name = getName(in);
+        String lastName = getLastName(in);
+        String mothersMaidenName = getMothersMaidenName(in);
         MaritalStatus maritalStatus = getMaritalStatus(in);
-
         Education education = getEducation(in);
-
-
-        System.out.println("Enter your email address:");
-        String email = in.next();
-
-        System.out.println("Enter your phone number:");
-        String phoneNumber = in.next();
-
-        System.out.println("How many sources of income do you have?");
-        int numOfSourcesOfIncome = in.nextInt();
-
-        SourcesOfIncome[] sourcesOfIncome = new SourcesOfIncome[numOfSourcesOfIncome];
-        for (int i = 1; i <= numOfSourcesOfIncome; i++) {
-            IncomeType incomeType = getIncomeType(in, i);
-            System.out.println("Enter net monthly income of source of income " + i);
-            double netMonthlyIncome = in.nextDouble();
-
-            SourcesOfIncome sourceOfIncome = new SourcesOfIncome(incomeType, netMonthlyIncome);
-            sourcesOfIncome[i - 1] = sourceOfIncome;
-        }
-
-        System.out.println("Enter number of family dependants (including applicant):");
-        int numOfDependant = in.nextInt();
-
+        String email = getEmail(in);
+        String phoneNumber = getPhoneNumber(in);
+        SourceOfIncome[] sourcesOfIncome = getSourceOfIncomes(in);
+        int numOfDependant = getNumOfDependants(in);
         PurposeOfLoanType purposeOfLoanType = getPurposeOfLoanType(in);
-
-        System.out.println("Enter loan amount");
-        double purposeOfLoanAmount = in.nextDouble();
-
-        System.out.println("Enter loan period (in years)");
-        int period = in.nextInt();
+        double purposeOfLoanAmount = getPurposeOfLoanAmount(in);
+        int period = getPeriod(in);
 
         PersonalData personalData = new PersonalData(name, lastName, mothersMaidenName, maritalStatus, education, numOfDependant);
         ContactData contactData = new ContactData(email, phoneNumber);
@@ -59,6 +29,108 @@ public class ConsoleReader {
         FinanceData financeData = new FinanceData(sourcesOfIncome);
 
         return new CreditApplication(new Person(personalData, contactData, financeData), purposeOfLoan);
+    }
+
+    private int getPeriod(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter loan period (in years)");
+            input = in.next();
+        } while (!NumberValidator.validateInteger(input, 5, 10, 15, 20, 25, 40));
+        return Integer.valueOf(input);
+    }
+
+    private SourceOfIncome[] getSourceOfIncomes(Scanner in) {
+        int numOfSourcesOfIncome = getNumOfSourcesOfIncome(in);
+        SourceOfIncome[] sourcesOfIncome = new SourceOfIncome[numOfSourcesOfIncome];
+        for (int i = 1; i <= numOfSourcesOfIncome; i++) {
+            IncomeType incomeType = getIncomeType(in, i);
+            double netMonthlyIncome = getNetMonthlyIncome(in, i);
+            SourceOfIncome sourceOfIncome = new SourceOfIncome(incomeType, netMonthlyIncome);
+            sourcesOfIncome[i - 1] = sourceOfIncome;
+        }
+        return sourcesOfIncome;
+    }
+
+    private double getNetMonthlyIncome(Scanner in, int i) {
+        String input;
+        do {
+            System.out.println("Enter net monthly income of source of income " + i);
+            input = in.next();
+        } while (!NumberValidator.validateDouble(input, 0.0, Double.MAX_VALUE));
+        return Double.valueOf(input);
+    }
+
+    private double getPurposeOfLoanAmount(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter loan amount");
+            input = in.next();
+        } while (!NumberValidator.validateDouble(input, 0.0, Double.MAX_VALUE));
+        return Double.valueOf(input);
+    }
+
+    private int getNumOfSourcesOfIncome(Scanner in) {
+        String input;
+        do {
+            System.out.println("How many sources of income do you have?");
+            input = in.next();
+        } while (!NumberValidator.validateInteger(input, 0, Integer.MAX_VALUE));
+        return Integer.valueOf(input);
+    }
+
+    private int getNumOfDependants(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter number of family dependants (including applicant):");
+            input = in.next();
+        } while (!NumberValidator.validateInteger(input, 1, Integer.MAX_VALUE));
+        return Integer.valueOf(input);
+    }
+
+    private String getName(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter your name");
+            input = in.next();
+        } while (!StringValidator.validateString(input, Constants.NAME_REGEX));
+        return input;
+    }
+
+    private String getLastName(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter your last name");
+            input = in.next();
+        } while (!StringValidator.validateString(input, Constants.LAST_NAME_REGEX));
+        return input;
+    }
+
+    private String getEmail(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter your email");
+            input = in.next();
+        } while (!StringValidator.validateString(input, Constants.EMAIL_REGEX));
+        return input;
+    }
+
+    private String getPhoneNumber(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter your phone number ");
+            input = in.next();
+        } while (!PhoneValidator.validate(input));
+        return input;
+    }
+
+    private String getMothersMaidenName(Scanner in) {
+        String input;
+        do {
+            System.out.println("Enter your mothers maiden name");
+            input = in.next();
+        } while (!StringValidator.validateString(input, Constants.LAST_NAME_REGEX));
+        return input;
     }
 
     private PurposeOfLoanType getPurposeOfLoanType(Scanner in) {
@@ -73,7 +145,7 @@ public class ConsoleReader {
     private Education getEducation(Scanner in) {
         String educationInput;
         do {
-            System.out.println("What is your education level? (NONE, PRIMARY, MIDDLE, SECONDARY, POST_SECONDARY, TERTIARY)");
+            System.out.println("What is your education level? " + generateEducationElements());
             educationInput = in.next();
         } while (!EnumValidator.validateEducation(educationInput));
         return Education.valueOf(educationInput);
