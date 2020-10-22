@@ -1,8 +1,6 @@
 package pl.ps.creditapp.client;
-
 import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.model.*;
-
 import java.util.Scanner;
 
 public class ConsoleReader {
@@ -23,12 +21,26 @@ public class ConsoleReader {
         double purposeOfLoanAmount = getPurposeOfLoanAmount(in);
         int period = getPeriod(in);
 
-        PersonalData personalData = new PersonalData(name, lastName, mothersMaidenName, maritalStatus, education, numOfDependant);
         ContactData contactData = new ContactData(email, phoneNumber);
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(purposeOfLoanType, purposeOfLoanAmount, period);
         FinanceData financeData = new FinanceData(sourcesOfIncome);
 
-        return new CreditApplication(new Person(personalData, contactData, financeData), purposeOfLoan);
+        return new CreditApplication(Person.Builder
+                .create()
+                .withContactData(contactData)
+                .withFinanceData(financeData)
+                .withPersonalData(PersonalData
+                        .Builder
+                        .create()
+                        .withName(name)
+                        .withLastName(lastName)
+                        .withMothersMaidenName(mothersMaidenName)
+                        .withEducation(education)
+                        .withNumOfDependants(numOfDependant)
+                        .withMaritalStatus(maritalStatus)
+                        .build())
+                .build(),
+                purposeOfLoan);
     }
 
     private int getPeriod(Scanner in) {
@@ -58,7 +70,7 @@ public class ConsoleReader {
             System.out.println("Enter net monthly income of source of income " + i);
             input = in.next();
         } while (!NumberValidator.validateDouble(input, 0.0, Double.MAX_VALUE));
-        return Double.valueOf(input);
+        return in.nextDouble();
     }
 
     private double getPurposeOfLoanAmount(Scanner in) {

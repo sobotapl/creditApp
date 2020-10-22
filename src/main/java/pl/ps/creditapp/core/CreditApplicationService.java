@@ -28,15 +28,19 @@ public class CreditApplicationService {
         int scoring = personScoringCalculator.calculate(person);
         CreditApplicationDecision decision;
         if (scoring < 300) {
-            decision = new CreditApplicationDecision(DecisionType.NEGATIVE_SCORING, person.getPersonalData(), null);
+            decision = new CreditApplicationDecision(DecisionType.NEGATIVE_SCORING, person.getPersonalData(), null, scoring);
         } else if (scoring <= 400) {
-            decision = new CreditApplicationDecision(DecisionType.CONTACT_REQUIRED, person.getPersonalData(), null);
+            decision = new CreditApplicationDecision(DecisionType.CONTACT_REQUIRED, person.getPersonalData(), null, scoring);
         } else {
             double creditRate = creditRatingCalculator.calculate(creditApplication);
             if (creditRate >= creditApplication.getPurposeOfLoan().getAmount()) {
-                decision = new CreditApplicationDecision(DecisionType.POSITIVE, person.getPersonalData(), creditRate);
+                if(creditApplication.getPurposeOfLoan().getAmount() < Constants.MIN_LOAN_AMOUNT_MORTGAGE){
+                    decision = new CreditApplicationDecision(DecisionType.NEGATIVE_REQUIREMENTS_NOT_MET, person.getPersonalData(), creditRate, scoring);
+                }else {
+                    decision = new CreditApplicationDecision(DecisionType.POSITIVE, person.getPersonalData(), creditRate, scoring);
+                }
             } else {
-                decision = new CreditApplicationDecision(DecisionType.NEGATIVE_RATING, person.getPersonalData(), creditRate);
+                decision = new CreditApplicationDecision(DecisionType.NEGATIVE_RATING, person.getPersonalData(), creditRate, scoring);
             }
         }
         log.info("Decision = " + decision.getType());

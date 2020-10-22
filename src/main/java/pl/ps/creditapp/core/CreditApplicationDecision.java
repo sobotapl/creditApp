@@ -8,11 +8,13 @@ public class CreditApplicationDecision {
     private final DecisionType type;
     private final PersonalData personalData;
     private final Double creditRate;
+    private final int scoring;
 
-    public CreditApplicationDecision(DecisionType type, PersonalData personalData, Double creditRate) {
+    public CreditApplicationDecision(DecisionType type, PersonalData personalData, Double creditRate, int scoring) {
         this.type = type;
         this.personalData = personalData;
         this.creditRate = creditRate;
+        this.scoring = scoring;
     }
 
     public String getDecisionString(){
@@ -31,7 +33,16 @@ public class CreditApplicationDecision {
         return null;
     }
 
+    public int getScoring() {
+        return scoring;
+    }
+
+    public Double getCreditRate() {
+        return creditRate;
+    }
+
     public DecisionType getType() {
         return type;
     }
 }
+
