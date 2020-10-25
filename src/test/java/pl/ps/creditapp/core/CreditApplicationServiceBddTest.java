@@ -9,10 +9,11 @@ import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CreditApplicationServiceBddTest {
-
-    NaturalPersonScoringCalculator naturalPersonScoringCalculator = new NaturalPersonScoringCalculator(new EducationCalculator(), new MaritalStatusCalculator(), new IncomeCalculator());
-    SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator(new EducationCalculator(), new MaritalStatusCalculator(), new IncomeCalculator());
-    PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(naturalPersonScoringCalculator, selfEmployedScoringCalculator);
+    private EducationCalculator educationCalculator = new EducationCalculator();
+    private MaritalStatusCalculator maritalStatusCalculator = new MaritalStatusCalculator();
+    private IncomeCalculator incomeCalculator = new IncomeCalculator();
+    private SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator();
+    private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator);
     private CreditApplicationService cut = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator());
 
     @Test

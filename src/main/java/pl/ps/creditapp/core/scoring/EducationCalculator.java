@@ -5,9 +5,10 @@ import org.slf4j.LoggerFactory;
 import pl.ps.creditapp.core.model.Education;
 import pl.ps.creditapp.core.model.Person;
 
-public class EducationCalculator {
+public class EducationCalculator  implements PersonalCalculator{
     private static final Logger log = LoggerFactory.getLogger(EducationCalculator.class);
 
+    @Override
     public int calculate(Person person) {
         Education education = person.getPersonalData().getEducation();
         int pointsForEducation = education.getScoringPoints();

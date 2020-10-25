@@ -4,6 +4,7 @@ import pl.ps.creditapp.core.model.PersonalData;
 
 import java.math.BigDecimal;
 
+
 public class CreditApplicationDecision {
     private final DecisionType type;
     private final PersonalData personalData;

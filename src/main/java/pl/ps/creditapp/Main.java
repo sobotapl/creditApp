@@ -11,9 +11,11 @@ import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
 public class Main {
 
     public static void main(String[] args) {
-        NaturalPersonScoringCalculator naturalPersonScoringCalcuator= new NaturalPersonScoringCalculator(new EducationCalculator(), new MaritalStatusCalculator(), new IncomeCalculator());
-        SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator(new EducationCalculator(), new MaritalStatusCalculator(), new IncomeCalculator());
-        PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(naturalPersonScoringCalcuator, selfEmployedScoringCalculator);
+        EducationCalculator educationCalculator = new EducationCalculator();
+        MaritalStatusCalculator maritalStatusCalculator = new MaritalStatusCalculator();
+        IncomeCalculator incomeCalculator = new IncomeCalculator();
+        SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator();
+        PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator);
 
         CreditApplicationService service = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator());
         CreditApplication creditApplication = new ConsoleReader().readInputParameters();

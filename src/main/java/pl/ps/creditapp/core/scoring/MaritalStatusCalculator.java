@@ -5,10 +5,11 @@ import org.slf4j.LoggerFactory;
 import pl.ps.creditapp.core.model.MaritalStatus;
 import pl.ps.creditapp.core.model.Person;
 
-public class MaritalStatusCalculator {
+public class MaritalStatusCalculator implements PersonalCalculator {
 
     private static final Logger log = LoggerFactory.getLogger(MaritalStatusCalculator.class);
 
+    @Override
     public int calculate(Person person) {
         MaritalStatus maritalStatus = person.getPersonalData().getMaritalStatus();
         int pointsForEducation = maritalStatus.getScoringPoints();
