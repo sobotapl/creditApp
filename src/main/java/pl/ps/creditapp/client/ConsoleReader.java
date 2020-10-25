@@ -21,11 +21,15 @@ public class ConsoleReader {
         double purposeOfLoanAmount = getPurposeOfLoanAmount(in);
         int period = getPeriod(in);
 
-        ContactData contactData = new ContactData(email, phoneNumber);
+        ContactData contactData = ContactData.Builder
+                .create()
+                .withEmail(email)
+                .withPhoneNumber(phoneNumber)
+                .build();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(purposeOfLoanType, purposeOfLoanAmount, period);
         FinanceData financeData = new FinanceData(sourcesOfIncome);
 
-        return new CreditApplication(Person.Builder
+        return new CreditApplication(NaturalPerson.Builder
                 .create()
                 .withContactData(contactData)
                 .withFinanceData(financeData)

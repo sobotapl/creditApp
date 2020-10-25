@@ -1,5 +1,6 @@
 package pl.ps.creditapp.core;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.ps.creditapp.core.model.CreditApplication;
 import pl.ps.creditapp.core.model.CreditApplicationTestFactory;
+import pl.ps.creditapp.core.model.Person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,7 +26,16 @@ class CreditApplicationServiceTest {
     private PersonScoringCalculator calculatorMock;
 
     @Mock
+    private PersonScoringCalculatorFactory personScoringCalculatorFactoryMock;
+
+    @Mock
     private CreditRatingCalculator creditRatingCalculatorMock;
+
+    @BeforeEach
+    public void init(){
+        BDDMockito.given(personScoringCalculatorFactoryMock.getCalculator(any(Person.class)))
+                .willReturn(calculatorMock);
+    }
 
     @Test
     @DisplayName("should return NEGATIVE_SCORING decision, when scoring is < 300")

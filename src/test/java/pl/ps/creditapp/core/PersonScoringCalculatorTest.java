@@ -20,7 +20,10 @@ import static org.mockito.ArgumentMatchers.eq;
 class PersonScoringCalculatorTest {
 
     @InjectMocks
-    private PersonScoringCalculator cut;
+    private NaturalPersonScoringCalculator cut1;
+
+    @InjectMocks
+    private SelfEmployedScoringCalculator cut2;
 
     @Mock
     private EducationCalculator educationCalculatorMock;
@@ -41,7 +44,12 @@ class PersonScoringCalculatorTest {
         BDDMockito.given(incomeCalculatorMock.calculate(eq(person)))
                 .willReturn(50);
         //when
-        int scoring = cut.calculate(person);
+        int scoring = cut1.calculate(person);
+        //then
+        assertEquals(350, scoring);
+
+        //when
+        scoring = cut2.calculate(person);
         //then
         assertEquals(350, scoring);
 

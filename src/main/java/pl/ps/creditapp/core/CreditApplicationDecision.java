@@ -45,4 +45,3 @@ public class CreditApplicationDecision {
         return type;
     }
 }
-

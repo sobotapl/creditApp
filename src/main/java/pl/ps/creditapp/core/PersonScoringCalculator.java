@@ -7,9 +7,8 @@ import pl.ps.creditapp.core.scoring.EducationCalculator;
 import pl.ps.creditapp.core.scoring.IncomeCalculator;
 import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
 
-public class PersonScoringCalculator {
+public abstract class PersonScoringCalculator {
     private static final Logger log = LoggerFactory.getLogger(PersonScoringCalculator.class);
-
     private final EducationCalculator educationCalculator;
     private final MaritalStatusCalculator maritalStatusCalculator;
     private final IncomeCalculator incomeCalculator;
@@ -21,8 +20,13 @@ public class PersonScoringCalculator {
     }
 
     public int calculate(Person person) {
-        int scoring = educationCalculator.calculate(person) + maritalStatusCalculator.calculate(person) + incomeCalculator.calculate(person);
+        int scoring = educationCalculator.calculate(person) + maritalStatusCalculator.calculate(person) + incomeCalculator.calculate(person) + addAdditionalPoints(person);
         log.info("Calculated scoring = " + scoring + " points");
         return scoring;
     }
+
+
+
+    protected abstract int addAdditionalPoints(Person person);
+
 }
