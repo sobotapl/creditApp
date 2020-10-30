@@ -8,10 +8,12 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.ps.creditapp.core.exception.ValidationException;
 import pl.ps.creditapp.core.model.CreditApplication;
 import pl.ps.creditapp.core.model.CreditApplicationTestFactory;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.scoring.PersonalCalculator;
+import pl.ps.creditapp.core.validation.CreditApplicationValidator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,15 +29,22 @@ class CreditApplicationServiceTest {
     private PersonalCalculator personalCalculatorMock;
 
     @Mock
+    private CreditApplicationValidator creditApplicationValidatorMock;
+
+    @Mock
     private PersonScoringCalculatorFactory personScoringCalculatorFactoryMock;
 
     @Mock
     private CreditRatingCalculator creditRatingCalculatorMock;
 
     @BeforeEach
-    public void init(){
+    public void init() throws ValidationException {
         BDDMockito.given(personScoringCalculatorFactoryMock.getCalculator(any(Person.class)))
                 .willReturn(personalCalculatorMock);
+
+        BDDMockito.doNothing()
+                .when(creditApplicationValidatorMock)
+                .validate(any(CreditApplication.class));
     }
 
     @Test
