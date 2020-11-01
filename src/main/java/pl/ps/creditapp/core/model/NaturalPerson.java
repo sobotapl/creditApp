@@ -1,12 +1,14 @@
 package pl.ps.creditapp.core.model;
 
+import java.util.List;
+
 public class NaturalPerson extends Person{
     private final String pesel;
 
 
 
-    private NaturalPerson (String pesel, PersonalData personalData, ContactData contactData, FinanceData financeData){
-        super(personalData,contactData,financeData);
+    private NaturalPerson (String pesel, PersonalData personalData, ContactData contactData, FinanceData financeData, List<FamilyMember> familyMemberList){
+        super(personalData,contactData,financeData, familyMemberList);
         this.pesel = pesel;
     }
 
@@ -15,6 +17,7 @@ public class NaturalPerson extends Person{
         private ContactData contactData;
         private FinanceData financeData;
         private String pesel;
+        private List<FamilyMember> familyMemberList;
 
         private Builder() {
         }
@@ -25,6 +28,10 @@ public class NaturalPerson extends Person{
 
         public Builder withPersonalData(PersonalData personalData) {
             this.personalData = personalData;
+            return this;
+        }
+        public Builder withFamilyMembers(List<FamilyMember> familyMemberList) {
+            this.familyMemberList = familyMemberList;
             return this;
         }
 
@@ -45,7 +52,7 @@ public class NaturalPerson extends Person{
 
 
         public NaturalPerson build() {
-            return new NaturalPerson (pesel, personalData, contactData, financeData);
+            return new NaturalPerson (pesel, personalData, contactData, financeData, familyMemberList);
         }
     }
 }

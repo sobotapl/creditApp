@@ -1,6 +1,8 @@
 package pl.ps.creditapp.core.model;
 
-public class SelfEmployed extends Person{
+import java.util.List;
+
+public class SelfEmployed extends Person {
     private final String nip;
     private final String regon;
     private final int yearsSinceFounded;
@@ -9,32 +11,39 @@ public class SelfEmployed extends Person{
         return yearsSinceFounded;
     }
 
-    private SelfEmployed (int yearsSinceFounded, String nip, String regon, PersonalData personalData, ContactData contactData, FinanceData financeData){
-        super(personalData,contactData,financeData);
+    private SelfEmployed(int yearsSinceFounded, String nip, String regon, PersonalData personalData, ContactData contactData, FinanceData financeData, List<FamilyMember> familyMemberList) {
+        super(personalData, contactData, financeData, familyMemberList);
         this.nip = nip;
         this.regon = regon;
         this.yearsSinceFounded = yearsSinceFounded;
     }
 
-    public static class Builder{
+    public static class Builder {
         private PersonalData personalData;
         private ContactData contactData;
         private FinanceData financeData;
         private String nip;
         private String regon;
         private int yearsSinceFounded;
+        private List<FamilyMember> familyMemberList;
+
 
         private Builder() {
+        }
+
+        public Builder withFamilyMembers(List<FamilyMember> familyMemberList) {
+            this.familyMemberList = familyMemberList;
+            return this;
         }
 
         public static Builder create() {
             return new Builder();
         }
+
         public Builder withYearsSinceFounded(int yearsSinceFounded) {
             this.yearsSinceFounded = yearsSinceFounded;
             return this;
         }
-
 
         public Builder withPersonalData(PersonalData personalData) {
             this.personalData = personalData;
@@ -55,13 +64,14 @@ public class SelfEmployed extends Person{
             this.nip = nip;
             return this;
         }
-        public Builder withRegon (String regon) {
+
+        public Builder withRegon(String regon) {
             this.regon = regon;
             return this;
         }
 
         public SelfEmployed build() {
-            return new SelfEmployed(yearsSinceFounded, nip, regon, personalData, contactData, financeData);
+            return new SelfEmployed(yearsSinceFounded, nip, regon, personalData, contactData, financeData, familyMemberList);
         }
     }
 }
