@@ -1,10 +1,16 @@
 package pl.ps.creditapp.core.scoring;
 
+import pl.ps.creditapp.core.model.CreditApplication;
 import pl.ps.creditapp.core.model.NaturalPerson;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.model.SelfEmployed;
 
-public interface PersonalCalculator {
+
+public interface ScoringCalculator {
+
+    default int calculate(CreditApplication creditApplication) {
+        return calculate(creditApplication.getPerson());
+    }
 
     default int calculate(Person person) {
         if (person instanceof SelfEmployed) {

@@ -30,6 +30,20 @@ public abstract class Person {
         return familyMembers;
     }
 
+    public double getBalance() {
+        double totalMonthlyIncome = 0;
+        for (SourceOfIncome sourceOfIncome : financeData.getSourcesOfIncome()) {
+            totalMonthlyIncome += sourceOfIncome.getNetMonthlyIncome();
+        }
+
+        double totalExpenses = 0;
+        for (Expense expense : financeData.getExpenses()) {
+            totalExpenses += expense.getAmount();
+        }
+
+        return totalMonthlyIncome - totalExpenses;
+    }
+
     public int getNumOfDependants() {
         return 1 + this.familyMembers.size();
     }
@@ -47,10 +61,6 @@ public abstract class Person {
     }
 
     public double getIncomePerFamilyMember() {
-        double totalMonthlyIncome = 0;
-        for (SourceOfIncome sourceOfIncome : financeData.getSourcesOfIncome()) {
-            totalMonthlyIncome += sourceOfIncome.getNetMonthlyIncome();
-        }
-        return totalMonthlyIncome / this.getNumOfDependants();
+        return getBalance() / this.getNumOfDependants();
     }
 }

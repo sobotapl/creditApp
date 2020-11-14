@@ -8,16 +8,17 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.ps.creditapp.core.exception.RequirementNotMetException;
 import pl.ps.creditapp.core.exception.ValidationException;
 import pl.ps.creditapp.core.model.CreditApplication;
 import pl.ps.creditapp.core.model.CreditApplicationTestFactory;
 import pl.ps.creditapp.core.model.Person;
-import pl.ps.creditapp.core.scoring.PersonalCalculator;
+import pl.ps.creditapp.core.scoring.ScoringCalculator;
+import pl.ps.creditapp.core.validation.CompoundPostValidator;
 import pl.ps.creditapp.core.validation.CreditApplicationValidator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class CreditApplicationServiceTest {
@@ -26,10 +27,13 @@ class CreditApplicationServiceTest {
     private CreditApplicationService cut;
 
     @Mock
-    private PersonalCalculator personalCalculatorMock;
+    private ScoringCalculator scoringCalculatorMock;
 
     @Mock
     private CreditApplicationValidator creditApplicationValidatorMock;
+
+    @Mock
+    private CompoundPostValidator compoundPostValidatorMock;
 
     @Mock
     private PersonScoringCalculatorFactory personScoringCalculatorFactoryMock;
@@ -38,13 +42,17 @@ class CreditApplicationServiceTest {
     private CreditRatingCalculator creditRatingCalculatorMock;
 
     @BeforeEach
-    public void init() throws ValidationException {
+    public void init() throws ValidationException, RequirementNotMetException {
         BDDMockito.given(personScoringCalculatorFactoryMock.getCalculator(any(Person.class)))
-                .willReturn(personalCalculatorMock);
+                .willReturn(scoringCalculatorMock);
 
         BDDMockito.doNothing()
                 .when(creditApplicationValidatorMock)
                 .validate(any(CreditApplication.class));
+
+        BDDMockito.doNothing()
+                .when(compoundPostValidatorMock)
+                .validate(any(CreditApplication.class), anyInt(), anyDouble());
     }
 
     @Test
@@ -52,7 +60,7 @@ class CreditApplicationServiceTest {
     public void test1() {
         //given
         CreditApplication creditApplication = CreditApplicationTestFactory.create();
-        BDDMockito.given(personalCalculatorMock.calculate(eq(creditApplication.getPerson())))
+        BDDMockito.given(scoringCalculatorMock.calculate(eq(creditApplication)))
                 .willReturn(100);
 
         //when
@@ -67,7 +75,7 @@ class CreditApplicationServiceTest {
     public void test2() {
         //given
         CreditApplication creditApplication = CreditApplicationTestFactory.create();
-        BDDMockito.given(personalCalculatorMock.calculate(eq(creditApplication.getPerson())))
+        BDDMockito.given(scoringCalculatorMock.calculate(eq(creditApplication)))
                 .willReturn(350);
 
         //when
@@ -82,7 +90,7 @@ class CreditApplicationServiceTest {
     public void test3() {
         //given
         CreditApplication creditApplication = CreditApplicationTestFactory.create(190000.00);
-        BDDMockito.given(personalCalculatorMock.calculate(eq(creditApplication.getPerson())))
+        BDDMockito.given(scoringCalculatorMock.calculate(eq(creditApplication)))
                 .willReturn(450);
 
         BDDMockito.given(creditRatingCalculatorMock.calculate(eq(creditApplication))).
@@ -100,7 +108,7 @@ class CreditApplicationServiceTest {
     public void test4() {
         //given
         CreditApplication creditApplication = CreditApplicationTestFactory.create(150000.00);
-        BDDMockito.given(personalCalculatorMock.calculate(eq(creditApplication.getPerson())))
+        BDDMockito.given(scoringCalculatorMock.calculate(eq(creditApplication)))
                 .willReturn(450);
         BDDMockito.given(creditRatingCalculatorMock.calculate(eq(creditApplication))).
                 willReturn(151000.00);

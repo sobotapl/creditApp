@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import pl.ps.creditapp.core.model.MaritalStatus;
 import pl.ps.creditapp.core.model.Person;
 
-public class MaritalStatusCalculator implements PersonalCalculator {
+public class MaritalStatusCalculator implements ScoringCalculator {
 
     private static final Logger log = LoggerFactory.getLogger(MaritalStatusCalculator.class);
 

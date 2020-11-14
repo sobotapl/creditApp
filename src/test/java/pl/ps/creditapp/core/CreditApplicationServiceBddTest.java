@@ -2,34 +2,38 @@ package pl.ps.creditapp.core;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pl.ps.creditapp.core.exception.RequirementNotMetCause;
 import pl.ps.creditapp.core.model.*;
 import pl.ps.creditapp.core.scoring.EducationCalculator;
+import pl.ps.creditapp.core.scoring.GuarantorsCalculator;
 import pl.ps.creditapp.core.scoring.IncomeCalculator;
 import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
-import pl.ps.creditapp.core.validation.CreditApplicationValidator;
-import pl.ps.creditapp.core.validation.PersonValidator;
-import pl.ps.creditapp.core.validation.PersonalDataValidator;
-import pl.ps.creditapp.core.validation.PurposeOfLoanValidator;
+import pl.ps.creditapp.core.validation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CreditApplicationServiceBddTest {
     private EducationCalculator educationCalculator = new EducationCalculator();
     private MaritalStatusCalculator maritalStatusCalculator = new MaritalStatusCalculator();
     private IncomeCalculator incomeCalculator = new IncomeCalculator();
     private SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator();
-    private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator);
-    private CreditApplicationValidator creditApplicationValidator = new CreditApplicationValidator(new PersonValidator(new PersonalDataValidator()),new PurposeOfLoanValidator());
-    private CreditApplicationService cut = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator(), creditApplicationValidator);
+    private GuarantorsCalculator guarantorsCalculator = new GuarantorsCalculator();
+    private GuarantorValidator guarantorValidator = new GuarantorValidator();
+    private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator, guarantorsCalculator);
+    private CreditApplicationValidator creditApplicationValidator = new CreditApplicationValidator(new PersonValidator(new PersonalDataValidator()), new PurposeOfLoanValidator(), guarantorValidator);
+    private CompoundPostValidator compoundPostValidator = new CompoundPostValidator(new PurposeOfLoanPostValidator(), new ExpansesPostValidator());
+    private CreditApplicationService cut = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator(), creditApplicationValidator, compoundPostValidator);
 
     @Test
     @DisplayName("should return Decision is NEGATIVE_REQUIREMENTS_NOT_MET, min loan amount  requirement is not met")
     public void test1() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John",18));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         NaturalPerson person = NaturalPerson.Builder
                 .create()
                 .withFamilyMembers(familyMemberList)
@@ -59,7 +63,7 @@ class CreditApplicationServiceBddTest {
     @DisplayName("should return Decision is negative, when years since founded <2")
     public void test2() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John",18));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
                 .withFamilyMembers(familyMemberList)
@@ -88,7 +92,7 @@ class CreditApplicationServiceBddTest {
     @DisplayName("should return Decision is contact required, when years since founded >=2")
     public void test3() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John",18));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
                 .withFamilyMembers(familyMemberList)
@@ -111,6 +115,38 @@ class CreditApplicationServiceBddTest {
         //then
         assertEquals(DecisionType.CONTACT_REQUIRED, decision.getType());
         assertEquals(400, decision.getScoring());
+    }
+
+    @Test
+    @DisplayName("should return Decision is negative requirements not met, cause too high personal expenses")
+    public void test4() {
+        //given
+        Set<Expense> expenseSet = Set.of(new Expense("1", ExpenseType.PERSONAL, 500),
+                new Expense("2", ExpenseType.PERSONAL, 750));
+
+        final FinanceData financeData = new FinanceData(expenseSet, new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 2000.00));
+        SelfEmployed person = SelfEmployed.Builder
+                .create()
+                .withPersonalData(PersonalData.Builder.create()
+                        .withName("Test")
+                        .withLastName("Test")
+                        .withMothersMaidenName("Test")
+                        .withEducation(Education.MIDDLE)
+                        .withMaritalStatus(MaritalStatus.MARRIED)
+                        .build())
+                .withFinanceData(financeData)
+                .withYearsSinceFounded(3)
+                .build();
+        PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 500000.00, 30);
+        CreditApplication creditApplication = CreditApplicationTestFactory.create(person, purposeOfLoan);
+
+        //when
+        CreditApplicationDecision decision = cut.getDecision(creditApplication);
+
+        //then
+        assertEquals(DecisionType.NEGATIVE_REQUIREMENTS_NOT_MET, decision.getType());
+        assertTrue(decision.getRequirementNotMetCause().isPresent());
+        assertEquals(RequirementNotMetCause.TOO_HIGH_PERSONAL_EXPENSES, decision.getRequirementNotMetCause().get());
     }
 
 

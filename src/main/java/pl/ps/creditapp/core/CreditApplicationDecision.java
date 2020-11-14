@@ -1,25 +1,37 @@
 package pl.ps.creditapp.core;
 
+import pl.ps.creditapp.core.exception.RequirementNotMetCause;
 import pl.ps.creditapp.core.model.PersonalData;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 
 public class CreditApplicationDecision {
     private final DecisionType type;
+    private final Optional<RequirementNotMetCause> requirementNotMetCause;
     private final PersonalData personalData;
     private final Double creditRate;
-    private final int scoring;
+    private final Integer scoring;
 
-    public CreditApplicationDecision(DecisionType type, PersonalData personalData, Double creditRate, int scoring) {
+    public CreditApplicationDecision(DecisionType type, PersonalData personalData, Double creditRate, Integer scoring) {
         this.type = type;
         this.personalData = personalData;
         this.creditRate = creditRate;
         this.scoring = scoring;
+        this.requirementNotMetCause = Optional.empty();
     }
 
-    public String getDecisionString(){
-        switch (type){
+    public CreditApplicationDecision(DecisionType type, PersonalData personalData, Double creditRate, Integer scoring, RequirementNotMetCause cause) {
+        this.type = type;
+        this.personalData = personalData;
+        this.creditRate = creditRate;
+        this.scoring = scoring;
+        this.requirementNotMetCause = Optional.of(cause);
+    }
+
+    public String getDecisionString() {
+        switch (type) {
             case POSITIVE:
                 return "Congratulations " + personalData.getName() + " " + personalData.getLastName() + ", decision is positive";
             case NEGATIVE_SCORING:
@@ -29,9 +41,24 @@ public class CreditApplicationDecision {
             case NEGATIVE_RATING:
                 BigDecimal roundedCreditRate = new BigDecimal(creditRate).setScale(2);
                 return "Sorry, " + personalData.getName() + " " + personalData.getLastName() + ", decision is negative. Bank can borrow only " + roundedCreditRate;
+            case NEGATIVE_REQUIREMENTS_NOT_MET:
+                switch (requirementNotMetCause.get()) {
+                    case TOO_HIGH_PERSONAL_EXPENSES:
+                        return "Sorry, " + personalData.getName() + " " + personalData.getLastName() + ", decision is negative. Personal expenses are too high";
+                    case TOO_LOW_LOAN_AMOUNT:
+                        return "Sorry, " + personalData.getName() + " " + personalData.getLastName() + ", decision is negative. Minimum loan amount for mortgage is " + Constants.MIN_LOAN_AMOUNT_MORTGAGE;
+                }
         }
 
         return null;
+    }
+
+    public Optional<RequirementNotMetCause> getRequirementNotMetCause() {
+        return requirementNotMetCause;
+    }
+
+    public PersonalData getPersonalData() {
+        return personalData;
     }
 
     public int getScoring() {

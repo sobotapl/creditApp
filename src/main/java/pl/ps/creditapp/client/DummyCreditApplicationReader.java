@@ -4,6 +4,7 @@ import pl.ps.creditapp.core.model.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class DummyCreditApplicationReader implements CreditApplicationReader {
     @Override
@@ -28,10 +29,9 @@ public class DummyCreditApplicationReader implements CreditApplicationReader {
                 .withFinanceData(new FinanceData(new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 10000.00)))
                 .build();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 50000.00, 30);
-        CreditApplication creditApplication = new CreditApplication(person, purposeOfLoan);
-
-        System.out.println(person.getFamilyMembersSortedByName());
-        System.out.println(person.getFamilyMembers());
+        Set<Guarantor> guarantorSet = Set.of(new Guarantor("12341234123", 18),
+                new Guarantor("12341234124", 41));
+        CreditApplication creditApplication = new CreditApplication(person, purposeOfLoan,guarantorSet);
         return creditApplication;
     }
 }

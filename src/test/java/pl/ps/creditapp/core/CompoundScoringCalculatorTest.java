@@ -4,10 +4,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.ps.creditapp.core.model.CreditApplication;
+import pl.ps.creditapp.core.model.CreditApplicationTestFactory;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.model.PersonTestFactory;
 import pl.ps.creditapp.core.scoring.*;
@@ -17,9 +17,9 @@ import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 class CompoundScoringCalculatorTest {
-    private PersonalCalculator calculator1Mock = Mockito.mock(PersonalCalculator.class);
-    private PersonalCalculator calculator2Mock = Mockito.mock(PersonalCalculator.class);
-    private PersonalCalculator calculator3Mock = Mockito.mock(PersonalCalculator.class);
+    private ScoringCalculator calculator1Mock = Mockito.mock(ScoringCalculator.class);
+    private ScoringCalculator calculator2Mock = Mockito.mock(ScoringCalculator.class);
+    private ScoringCalculator calculator3Mock = Mockito.mock(ScoringCalculator.class);
 
     private CompoundScoringCalculator cut = new CompoundScoringCalculator(calculator1Mock, calculator2Mock, calculator3Mock);
 
@@ -27,17 +27,16 @@ class CompoundScoringCalculatorTest {
     @DisplayName("should return sum of calculations")
     public void test1() {
         //given
-        Person person = PersonTestFactory.create();
-        BDDMockito.given(calculator1Mock.calculate(eq(person)))
+        CreditApplication creditApplication = CreditApplicationTestFactory.create();
+        BDDMockito.given(calculator1Mock.calculate(eq(creditApplication)))
                 .willReturn(100);
-        BDDMockito.given(calculator2Mock.calculate(eq(person)))
+        BDDMockito.given(calculator2Mock.calculate(eq(creditApplication)))
                 .willReturn(200);
-        BDDMockito.given(calculator3Mock.calculate(eq(person)))
+        BDDMockito.given(calculator3Mock.calculate(eq(creditApplication)))
                 .willReturn(50);
         //when
-        int scoring = cut.calculate(person);
+        int scoring = cut.calculate(creditApplication);
         //then
         assertEquals(350, scoring);
-
     }
 }

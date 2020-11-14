@@ -2,11 +2,10 @@ package pl.ps.creditapp.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.model.SelfEmployed;
 import pl.ps.creditapp.core.scoring.*;
 
-public class SelfEmployedScoringCalculator implements PersonalCalculator {
+public class SelfEmployedScoringCalculator implements ScoringCalculator {
     private static final Logger log = LoggerFactory.getLogger(SelfEmployedScoringCalculator.class);
 
     @Override
