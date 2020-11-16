@@ -10,9 +10,7 @@ import pl.ps.creditapp.core.model.NaturalPerson;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.validation.CompoundPostValidator;
 import pl.ps.creditapp.core.validation.CreditApplicationValidator;
-
 import java.util.UUID;
-
 import static pl.ps.creditapp.core.Constants.MIN_LOAN_AMOUNT_MORTGAGE;
 import static pl.ps.creditapp.core.DecisionType.*;
 

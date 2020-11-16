@@ -9,8 +9,11 @@ public enum MaritalStatus {
 
     private int scoringPoints;
 
+
+
     MaritalStatus() {
         this.scoringPoints = 0;
+
     }
 
     MaritalStatus(int scoringPoints) {

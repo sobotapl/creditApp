@@ -1,9 +1,16 @@
 package pl.ps.creditapp.core.model;
 
+import pl.ps.creditapp.core.Constants;
+import pl.ps.creditapp.core.annotation.NotNull;
+import pl.ps.creditapp.core.annotation.Regex;
+
 import java.util.Objects;
 
 public class Guarantor implements Comparable<Guarantor> {
+    @NotNull
+    @Regex(Constants.PESEL_REGEX)
     private final String pesel;
+    @NotNull
     private final Integer age;
 
     public Guarantor(String pesel, Integer age) {

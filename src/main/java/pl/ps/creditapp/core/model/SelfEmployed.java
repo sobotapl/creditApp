@@ -1,8 +1,10 @@
 package pl.ps.creditapp.core.model;
 
+import pl.ps.creditapp.core.annotation.ExactlyOneNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
-
+@ExactlyOneNotNull({"nip", "regon"})
 public class SelfEmployed extends Person {
     private final String nip;
     private final String regon;

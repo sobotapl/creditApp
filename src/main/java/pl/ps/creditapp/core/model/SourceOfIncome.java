@@ -1,7 +1,9 @@
 package pl.ps.creditapp.core.model;
 
-public class SourceOfIncome {
+import pl.ps.creditapp.core.annotation.NotNull;
 
+public class SourceOfIncome {
+    @NotNull
     private final IncomeType incomeType;
     private final double netMonthlyIncome;
 

@@ -9,6 +9,7 @@ import pl.ps.creditapp.core.scoring.GuarantorsCalculator;
 import pl.ps.creditapp.core.scoring.IncomeCalculator;
 import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
 import pl.ps.creditapp.core.validation.*;
+import pl.ps.creditapp.core.validation.reflection.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,9 +24,11 @@ class CreditApplicationServiceBddTest {
     private IncomeCalculator incomeCalculator = new IncomeCalculator();
     private SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator();
     private GuarantorsCalculator guarantorsCalculator = new GuarantorsCalculator();
-    private GuarantorValidator guarantorValidator = new GuarantorValidator();
     private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator, guarantorsCalculator);
-    private CreditApplicationValidator creditApplicationValidator = new CreditApplicationValidator(new PersonValidator(new PersonalDataValidator()), new PurposeOfLoanValidator(), guarantorValidator);
+    private Set<FieldAnnotationProcessor> fieldProcessors = Set.of(new NotNullAnnotationProcessor(), new RegexAnnotationProcessor());
+    private Set<ClassAnnotationProcessor> classProcessors = Set.of(new ExactlyOneNotNullAnnotationProcessor());
+    final ObjectValidator objectValidator = new ObjectValidator(fieldProcessors, classProcessors);
+    private CreditApplicationValidator creditApplicationValidator = new CreditApplicationValidator(objectValidator);
     private CompoundPostValidator compoundPostValidator = new CompoundPostValidator(new PurposeOfLoanPostValidator(), new ExpansesPostValidator());
     private CreditApplicationService cut = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator(), creditApplicationValidator, compoundPostValidator);
 
@@ -36,6 +39,7 @@ class CreditApplicationServiceBddTest {
         List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         NaturalPerson person = NaturalPerson.Builder
                 .create()
+                .withPesel("12341234123")
                 .withFamilyMembers(familyMemberList)
                 .withPersonalData(PersonalData.Builder.create()
                         .withName("Test")
@@ -45,6 +49,12 @@ class CreditApplicationServiceBddTest {
                         .withMaritalStatus(MaritalStatus.MARRIED)
                         .build())
                 .withFinanceData(new FinanceData(new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 10000.00)))
+                .withContactData(ContactData.Builder.create()
+                        .withEmail("test@test")
+                        .withPhoneNumber("456456456")
+                        .withHomeAddress(new Address("test", "test", "test", "test", "test"))
+                        .withCorrespondenceAddress(new Address("test", "test", "test", "test", "test"))
+                        .build())
                 .build();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 50000.00, 30);
         CreditApplication creditApplication = CreditApplicationTestFactory.create(person, purposeOfLoan);
@@ -66,6 +76,7 @@ class CreditApplicationServiceBddTest {
         List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
+                .withNip("3245234")
                 .withFamilyMembers(familyMemberList)
                 .withPersonalData(PersonalData.Builder.create()
                         .withName("Test")
@@ -76,6 +87,12 @@ class CreditApplicationServiceBddTest {
                         .build())
                 .withFinanceData(new FinanceData(new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 7000.00)))
                 .withYearsSinceFounded(1)
+                .withContactData(ContactData.Builder.create()
+                        .withEmail("test@test")
+                        .withPhoneNumber("456456456")
+                        .withHomeAddress(new Address("test", "test", "test", "test", "test"))
+                        .withCorrespondenceAddress(new Address("test", "test", "test", "test", "test"))
+                        .build())
                 .build();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 500000.00, 30);
         CreditApplication creditApplication = CreditApplicationTestFactory.create(person, purposeOfLoan);
@@ -95,6 +112,7 @@ class CreditApplicationServiceBddTest {
         List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", 18));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
+                .withNip("3245234")
                 .withFamilyMembers(familyMemberList)
                 .withPersonalData(PersonalData.Builder.create()
                         .withName("Test")
@@ -102,6 +120,12 @@ class CreditApplicationServiceBddTest {
                         .withMothersMaidenName("Test")
                         .withEducation(Education.MIDDLE)
                         .withMaritalStatus(MaritalStatus.MARRIED)
+                        .build())
+                .withContactData(ContactData.Builder.create()
+                        .withEmail("test@test")
+                        .withPhoneNumber("456456456")
+                        .withHomeAddress(new Address("test", "test", "test", "test", "test"))
+                        .withCorrespondenceAddress(new Address("test", "test", "test", "test", "test"))
                         .build())
                 .withFinanceData(new FinanceData(new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 7000.00)))
                 .withYearsSinceFounded(3)
@@ -127,12 +151,19 @@ class CreditApplicationServiceBddTest {
         final FinanceData financeData = new FinanceData(expenseSet, new SourceOfIncome(IncomeType.SELF_EMPLOYMENT, 2000.00));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
+                .withNip("3245234")
                 .withPersonalData(PersonalData.Builder.create()
                         .withName("Test")
                         .withLastName("Test")
                         .withMothersMaidenName("Test")
                         .withEducation(Education.MIDDLE)
                         .withMaritalStatus(MaritalStatus.MARRIED)
+                        .build())
+                .withContactData(ContactData.Builder.create()
+                        .withEmail("test@test")
+                        .withPhoneNumber("456456456")
+                        .withHomeAddress(new Address("test", "test", "test", "test", "test"))
+                        .withCorrespondenceAddress(new Address("test", "test", "test", "test", "test"))
                         .build())
                 .withFinanceData(financeData)
                 .withYearsSinceFounded(3)

@@ -1,6 +1,9 @@
 package pl.ps.creditapp.core.model;
 
+import pl.ps.creditapp.core.annotation.NotNull;
+
 public class PurposeOfLoan {
+    @NotNull
     private final PurposeOfLoanType purposeOfLoanType;
     private final double amount;
     private final int period;

@@ -9,6 +9,7 @@ import pl.ps.creditapp.core.model.SelfEmployed;
 public interface ScoringCalculator {
 
     default int calculate(CreditApplication creditApplication) {
+
         return calculate(creditApplication.getPerson());
     }
 
