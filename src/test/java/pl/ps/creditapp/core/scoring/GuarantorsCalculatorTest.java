@@ -2,6 +2,7 @@ package pl.ps.creditapp.core.scoring;
 
 import org.junit.jupiter.api.Test;
 import pl.ps.creditapp.core.model.*;
+import pl.ps.creditapp.util.AgeUtils;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -16,7 +17,7 @@ class GuarantorsCalculatorTest {
         //given
         NaturalPerson person = createNaturalPerson();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 50000.00, 30);
-        Set<Guarantor> guarantorSet = Set.of(new Guarantor("45645645645", 18));
+        Set<Guarantor> guarantorSet = Set.of(new Guarantor("45645645645", AgeUtils.generateBirthDate(18)));
         CreditApplication creditApplication = CreditApplicationTestFactory.create(person, purposeOfLoan, guarantorSet);
 
         //when
@@ -31,8 +32,8 @@ class GuarantorsCalculatorTest {
         //given
         NaturalPerson person = createNaturalPerson();
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 50000.00, 30);
-        Set<Guarantor> guarantorSet = Set.of(new Guarantor("45645645645", 18),
-                new Guarantor("45645645646", 41));
+        Set<Guarantor> guarantorSet = Set.of(new Guarantor("45645645645", AgeUtils.generateBirthDate(18)),
+                new Guarantor("45645645646", AgeUtils.generateBirthDate(41)));
         CreditApplication creditApplication = CreditApplicationTestFactory.create(person, purposeOfLoan, guarantorSet);
 
         //when

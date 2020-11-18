@@ -1,5 +1,4 @@
 package pl.ps.creditapp.core.validation;
-
 import pl.ps.creditapp.core.exception.*;
 
 public class ValidationUtils {

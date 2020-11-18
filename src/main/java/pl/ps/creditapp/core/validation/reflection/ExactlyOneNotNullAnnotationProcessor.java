@@ -3,7 +3,6 @@ package pl.ps.creditapp.core.validation.reflection;
 import pl.ps.creditapp.core.annotation.ExactlyOneNotNull;
 import pl.ps.creditapp.core.exception.ExactlyOneNotNullException;
 import pl.ps.creditapp.core.exception.ValidationException;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;

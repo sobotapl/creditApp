@@ -4,17 +4,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import pl.ps.creditapp.core.model.CreditApplication;
+import pl.ps.creditapp.di.Inject;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class CreditApplicationManager {
     private static final Logger log = LoggerFactory.getLogger(CreditApplicationManager.class);
-    private final CreditApplicationService creditApplicationService;
-    private final Deque<CreditApplication> queue = new ArrayDeque<>();
+
+    @Inject
+    private CreditApplicationService creditApplicationService;
+    private Deque<CreditApplication> queue = new ArrayDeque<>();
 
     public CreditApplicationManager(CreditApplicationService creditApplicationService) {
         this.creditApplicationService = creditApplicationService;
+    }
+
+    public CreditApplicationManager() {
+
     }
 
     public void add(CreditApplication creditApplication){

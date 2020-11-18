@@ -4,13 +4,19 @@ import pl.ps.creditapp.core.model.NaturalPerson;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.model.SelfEmployed;
 import pl.ps.creditapp.core.scoring.*;
+import pl.ps.creditapp.di.Inject;
 
 public class PersonScoringCalculatorFactory {
-    private final SelfEmployedScoringCalculator selfEmployedScoringCalculator;
-    private final EducationCalculator educationCalculator;
-    private final MaritalStatusCalculator maritalStatusCalculator;
-    private final IncomeCalculator incomeCalculator;
-    private final GuarantorsCalculator guarantorsCalculator;
+    @Inject
+    private  SelfEmployedScoringCalculator selfEmployedScoringCalculator;
+    @Inject
+    private  EducationCalculator educationCalculator;
+    @Inject
+    private  MaritalStatusCalculator maritalStatusCalculator;
+    @Inject
+    private  IncomeCalculator incomeCalculator;
+    @Inject
+    private  GuarantorsCalculator guarantorsCalculator;
 
     public PersonScoringCalculatorFactory(SelfEmployedScoringCalculator selfEmployedScoringCalculator, EducationCalculator educationCalculator, MaritalStatusCalculator maritalStatusCalculator, IncomeCalculator incomeCalculator, GuarantorsCalculator guarantorsCalculator) {
         this.selfEmployedScoringCalculator = selfEmployedScoringCalculator;
@@ -20,6 +26,9 @@ public class PersonScoringCalculatorFactory {
         this.guarantorsCalculator = guarantorsCalculator;
     }
 
+    public PersonScoringCalculatorFactory() {
+
+    }
 
     public ScoringCalculator getCalculator(Person person){
         if(person instanceof NaturalPerson){

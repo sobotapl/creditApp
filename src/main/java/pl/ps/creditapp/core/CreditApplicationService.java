@@ -10,16 +10,26 @@ import pl.ps.creditapp.core.model.NaturalPerson;
 import pl.ps.creditapp.core.model.Person;
 import pl.ps.creditapp.core.validation.CompoundPostValidator;
 import pl.ps.creditapp.core.validation.CreditApplicationValidator;
+import pl.ps.creditapp.di.Inject;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import static pl.ps.creditapp.core.Constants.MIN_LOAN_AMOUNT_MORTGAGE;
 import static pl.ps.creditapp.core.DecisionType.*;
 
 public class CreditApplicationService {
     private static final Logger log = LoggerFactory.getLogger(CreditApplicationService.class);
-    private final PersonScoringCalculatorFactory personScoringCalculatorFactory;
-    private final CreditRatingCalculator creditRatingCalculator;
-    private final CreditApplicationValidator creditApplicationValidator;
-    private final CompoundPostValidator compoundPostValidator;
+
+    @Inject
+    private  PersonScoringCalculatorFactory personScoringCalculatorFactory;
+    @Inject
+    private  CreditRatingCalculator creditRatingCalculator;
+    @Inject
+    private  CreditApplicationValidator creditApplicationValidator;
+    @Inject
+    private  CompoundPostValidator compoundPostValidator;
 
     public CreditApplicationService(PersonScoringCalculatorFactory personScoringCalculatorFactory, CreditRatingCalculator creditRatingCalculator, CreditApplicationValidator creditApplicationValidator, CompoundPostValidator compoundPostValidator) {
         this.personScoringCalculatorFactory = personScoringCalculatorFactory;
@@ -28,10 +38,16 @@ public class CreditApplicationService {
         this.compoundPostValidator = compoundPostValidator;
     }
 
+
+
+    public CreditApplicationService() {
+
+    }
+
     public CreditApplicationDecision getDecision(CreditApplication creditApplication) {
         String id = creditApplication.getId().toString();
         MDC.put("id", id);
-
+        Instant start = Instant.now();
         try {
             Person person = creditApplication.getPerson();
 
@@ -57,7 +73,9 @@ public class CreditApplicationService {
             exception.printStackTrace();
             throw new IllegalStateException();
         } finally {
-            log.info("Application processing is finished");
+            long ms1 = Duration.between(start,Instant.now()).toMillis();
+            long ms2 = Duration.between(creditApplication.getCreationDateClientZone(), ZonedDateTime.now(creditApplication.getClientTimeZone())).toMillis();
+            log.info("Application processing is finished. Took {}/{} ms",ms1,ms2 );
         }
     }
 
