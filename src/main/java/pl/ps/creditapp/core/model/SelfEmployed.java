@@ -10,6 +10,10 @@ public class SelfEmployed extends Person {
     private final String regon;
     private final int yearsSinceFounded;
 
+    public String getNip() {
+        return nip;
+    }
+
     public int getYearsSinceFounded() {
         return yearsSinceFounded;
     }

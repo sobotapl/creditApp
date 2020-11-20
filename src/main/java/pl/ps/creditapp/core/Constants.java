@@ -1,6 +1,7 @@
 package pl.ps.creditapp.core;
 
 import java.time.ZoneId;
+import java.util.Locale;
 
 public interface Constants {
     double MORTGAGE_LOAN_RATE = 0.2;
@@ -14,6 +15,8 @@ public interface Constants {
     String PESEL_REGEX = "\\d{11}";
     double MIN_LOAN_AMOUNT_MORTGAGE = 100000.00;
     ZoneId DEFAULT_SYSTEM_ZONE_ID = ZoneId.of("America/New_York");
+    Locale DEFAULT_LOCALE = Locale.US;
+    String BIK_API_ENDPOINT_URL= "https://test-api.javaskills.pl/udemy/bik/scoring";
 
 
 }

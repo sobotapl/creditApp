@@ -10,6 +10,7 @@ public class CompoundScoringCalculator implements ScoringCalculator {
     private static final Logger log = LoggerFactory.getLogger(CompoundScoringCalculator.class);
     private final ScoringCalculator[] calculators;
 
+
     public CompoundScoringCalculator(ScoringCalculator... calculators) {
         this.calculators = calculators;
     }

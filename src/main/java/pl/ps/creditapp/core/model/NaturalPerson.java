@@ -17,6 +17,10 @@ public class NaturalPerson extends Person {
         this.pesel = pesel;
     }
 
+    public String getPesel() {
+        return pesel;
+    }
+
     public static class Builder {
         private PersonalData personalData;
         private ContactData contactData;

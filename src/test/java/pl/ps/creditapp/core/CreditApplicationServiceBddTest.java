@@ -1,13 +1,16 @@
 package pl.ps.creditapp.core;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
+import pl.ps.creditapp.core.bik.BikApi;
+import pl.ps.creditapp.core.bik.ScoringRequest;
+import pl.ps.creditapp.core.bik.ScoringResponse;
 import pl.ps.creditapp.core.exception.RequirementNotMetCause;
 import pl.ps.creditapp.core.model.*;
-import pl.ps.creditapp.core.scoring.EducationCalculator;
-import pl.ps.creditapp.core.scoring.GuarantorsCalculator;
-import pl.ps.creditapp.core.scoring.IncomeCalculator;
-import pl.ps.creditapp.core.scoring.MaritalStatusCalculator;
+import pl.ps.creditapp.core.scoring.*;
 import pl.ps.creditapp.core.validation.*;
 import pl.ps.creditapp.core.validation.reflection.*;
 import pl.ps.creditapp.util.AgeUtils;
@@ -18,6 +21,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static pl.ps.creditapp.util.AgeUtils.generateBirthDate;
 
 class CreditApplicationServiceBddTest {
     private EducationCalculator educationCalculator = new EducationCalculator();
@@ -25,7 +30,10 @@ class CreditApplicationServiceBddTest {
     private IncomeCalculator incomeCalculator = new IncomeCalculator();
     private SelfEmployedScoringCalculator selfEmployedScoringCalculator = new SelfEmployedScoringCalculator();
     private GuarantorsCalculator guarantorsCalculator = new GuarantorsCalculator();
-    private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator, guarantorsCalculator);
+    private BikApi bankApiMock = Mockito.mock(BikApi.class);
+    private BikScoringCalculator bikScoringCalculator = new BikScoringCalculator(bankApiMock);
+    private PersonScoringCalculatorFactory personScoringCalculatorFactory = new PersonScoringCalculatorFactory(selfEmployedScoringCalculator, educationCalculator, maritalStatusCalculator, incomeCalculator,
+            guarantorsCalculator, bikScoringCalculator);
     private List<FieldAnnotationProcessor> fieldProcessors = List.of(new NotNullAnnotationProcessor(), new RegexAnnotationProcessor());
     private List<ClassAnnotationProcessor> classProcessors = List.of(new ExactlyOneNotNullAnnotationProcessor());
     final ObjectValidator objectValidator = new ObjectValidator(fieldProcessors, classProcessors);
@@ -33,11 +41,18 @@ class CreditApplicationServiceBddTest {
     private CompoundPostValidator compoundPostValidator = new CompoundPostValidator(new PurposeOfLoanPostValidator(), new ExpansesPostValidator());
     private CreditApplicationService cut = new CreditApplicationService(personScoringCalculatorFactory, new CreditRatingCalculator(), creditApplicationValidator, compoundPostValidator);
 
+    @BeforeEach
+    public void init() {
+        ScoringResponse res = new ScoringResponse();
+        res.setScoring(0);
+        BDDMockito.given(bankApiMock.getScoring(any(ScoringRequest.class))).willReturn(res);
+    }
+
     @Test
     @DisplayName("should return Decision is NEGATIVE_REQUIREMENTS_NOT_MET, min loan amount  requirement is not met")
     public void test1() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", AgeUtils.generateBirthDate(18)));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", generateBirthDate(18)));
         NaturalPerson person = NaturalPerson.Builder
                 .create()
                 .withPesel("12341234123")
@@ -74,7 +89,7 @@ class CreditApplicationServiceBddTest {
     @DisplayName("should return Decision is negative, when years since founded <2")
     public void test2() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", AgeUtils.generateBirthDate(18)));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", generateBirthDate(18)));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
                 .withNip("3245234")
@@ -110,7 +125,7 @@ class CreditApplicationServiceBddTest {
     @DisplayName("should return Decision is contact required, when years since founded >=2")
     public void test3() {
         //given
-        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", AgeUtils.generateBirthDate(18)));
+        List<FamilyMember> familyMemberList = Arrays.asList(new FamilyMember("John", generateBirthDate(18)));
         SelfEmployed person = SelfEmployed.Builder
                 .create()
                 .withNip("3245234")

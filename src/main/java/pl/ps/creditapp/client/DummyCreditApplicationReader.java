@@ -6,6 +6,7 @@ import pl.ps.creditapp.util.AgeUtils;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class DummyCreditApplicationReader implements CreditApplicationReader {
@@ -40,7 +41,7 @@ public class DummyCreditApplicationReader implements CreditApplicationReader {
         PurposeOfLoan purposeOfLoan = new PurposeOfLoan(PurposeOfLoanType.MORTGAGE, 50000.00, 30);
         Set<Guarantor> guarantorSet = Set.of(new Guarantor("12341234123", AgeUtils.generateBirthDate(18)),
                 new Guarantor("12341234124", AgeUtils.generateBirthDate(41)));
-        CreditApplication creditApplication = new CreditApplication(ZoneId.of("Europe/Warsaw"),person, purposeOfLoan, guarantorSet);
+        CreditApplication creditApplication = new CreditApplication(Locale.FRANCE, ZoneId.of("Europe/Warsaw"),person, purposeOfLoan, guarantorSet);
         return creditApplication;
     }
 }
