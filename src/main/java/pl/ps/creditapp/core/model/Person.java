@@ -3,12 +3,14 @@ import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.ValidateCollection;
 import pl.ps.creditapp.core.annotation.ValidateObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Person {
+public abstract class Person implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     @ValidateObject
     private final PersonalData personalData;

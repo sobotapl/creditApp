@@ -3,13 +3,15 @@ package pl.ps.creditapp.core;
 import pl.ps.creditapp.core.exception.RequirementNotMetCause;
 import pl.ps.creditapp.core.model.PersonalData;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
 
-public class CreditApplicationDecision {
+public class CreditApplicationDecision implements Serializable {
+    public static final long serialVersionUID =1l;
     private final DecisionType type;
-    private final Optional<RequirementNotMetCause> requirementNotMetCause;
+    private final transient Optional<RequirementNotMetCause> requirementNotMetCause;
     private final PersonalData personalData;
     private final Double creditRate;
     private final Integer scoring;

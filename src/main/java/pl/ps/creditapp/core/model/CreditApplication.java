@@ -3,11 +3,13 @@ import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.ValidateCollection;
 import pl.ps.creditapp.core.annotation.ValidateObject;
 
+import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-public class CreditApplication {
+public class CreditApplication implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     private final UUID id;
 

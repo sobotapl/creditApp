@@ -27,20 +27,21 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         CreditApplicationReader reader = new DummyCreditApplicationReader();
-
         List<FieldAnnotationProcessor> fieldProcessors = List.of(new NotNullAnnotationProcessor(), new RegexAnnotationProcessor());
         List<ClassAnnotationProcessor> classProcessors = List.of(new ExactlyOneNotNullAnnotationProcessor());
         final ObjectValidator objectValidator = new ObjectValidator(fieldProcessors, classProcessors);
-
         CompoundPostValidator compoundPostValidator = new CompoundPostValidator(new PurposeOfLoanPostValidator(), new ExpansesPostValidator());
         ClassInitializer classInitializer = new ClassInitializer();
         classInitializer.registerInstance(compoundPostValidator);
         classInitializer.registerInstance(objectValidator);
         classInitializer.registerInstance(new BikScoringCalculator(new BikApiAdapter()));
-
         CreditApplicationManager manager = (CreditApplicationManager) classInitializer.createInstance(CreditApplicationManager.class);
-        manager.add(reader.read());
-
-        manager.startProcessing();
+        if (args != null && args.length > 0) {
+            String id = args[0];
+            manager.loadApplication(id);
+        } else {
+            manager.add(reader.read());
+            manager.startProcessing();
+        }
     }
 }

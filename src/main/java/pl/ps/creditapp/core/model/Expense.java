@@ -2,9 +2,11 @@ package pl.ps.creditapp.core.model;
 
 import pl.ps.creditapp.core.annotation.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Expense {
+public class Expense implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     private final String name;
     @NotNull

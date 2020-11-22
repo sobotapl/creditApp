@@ -17,6 +17,7 @@ public interface Constants {
     ZoneId DEFAULT_SYSTEM_ZONE_ID = ZoneId.of("America/New_York");
     Locale DEFAULT_LOCALE = Locale.US;
     String BIK_API_ENDPOINT_URL= "https://test-api.javaskills.pl/udemy/bik/scoring";
+    String OUTPUT_PATH = "C:/tmp/java11/";
 
 
 }

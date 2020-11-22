@@ -5,9 +5,11 @@ import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
 import pl.ps.creditapp.core.annotation.ValidateObject;
 
+import java.io.Serializable;
 import java.util.Optional;
 
-public class ContactData {
+public class ContactData implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     @Regex(Constants.EMAIL_REGEX)
     private String email;
@@ -18,7 +20,7 @@ public class ContactData {
     @ValidateObject
     private Address homeAddress;
     @NotNull
-    private Optional<Address> correspondenceAddress;
+    private transient Optional<Address> correspondenceAddress;
 
     private ContactData(String email, String phoneNumber, Address homeAddress, Optional<Address> correspondenceAddress) {
         this.email = email;

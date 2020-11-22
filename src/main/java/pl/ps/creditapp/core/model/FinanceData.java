@@ -3,9 +3,11 @@ package pl.ps.creditapp.core.model;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.ValidateCollection;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class FinanceData {
+public class FinanceData implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     @ValidateCollection
     private final List<SourceOfIncome> sourcesOfIncome;

@@ -4,7 +4,10 @@ import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
 
-public class PersonalData {
+import java.io.Serializable;
+
+public class PersonalData implements Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     @Regex(Constants.NAME_REGEX)
     private final String name;

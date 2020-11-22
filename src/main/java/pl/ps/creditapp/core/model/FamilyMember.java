@@ -2,10 +2,12 @@ package pl.ps.creditapp.core.model;
 
 import pl.ps.creditapp.core.annotation.NotNull;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 
-public class FamilyMember implements Comparable<FamilyMember> {
+public class FamilyMember implements Comparable<FamilyMember>, Serializable {
+    public static final long serialVersionUID =1l;
     @NotNull
     private final String name;
     @NotNull

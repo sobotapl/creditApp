@@ -2,10 +2,12 @@ package pl.ps.creditapp.core.model;
 
 import pl.ps.creditapp.core.annotation.ExactlyOneNotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @ExactlyOneNotNull({"nip", "regon"})
-public class SelfEmployed extends Person {
+public class SelfEmployed extends Person  {
+    public static final long serialVersionUID =1l;
     private final String nip;
     private final String regon;
     private final int yearsSinceFounded;
