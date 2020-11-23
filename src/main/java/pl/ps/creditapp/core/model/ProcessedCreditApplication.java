@@ -6,7 +6,7 @@ import javax.script.ScriptEngine;
 import java.io.Serializable;
 
 public class ProcessedCreditApplication implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
 
     private final CreditApplication application;
     private final CreditApplicationDecision decision;
@@ -16,10 +16,6 @@ public class ProcessedCreditApplication implements Serializable {
         this.decision = decision;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public CreditApplication getApplication() {
         return application;
     }
@@ -27,4 +23,5 @@ public class ProcessedCreditApplication implements Serializable {
     public CreditApplicationDecision getDecision() {
         return decision;
     }
+
 }

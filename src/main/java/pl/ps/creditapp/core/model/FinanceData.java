@@ -1,5 +1,6 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.ValidateCollection;
 
@@ -7,14 +8,17 @@ import java.io.Serializable;
 import java.util.*;
 
 public class FinanceData implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
     @ValidateCollection
-    private final List<SourceOfIncome> sourcesOfIncome;
+    @JsonProperty
+    private List<SourceOfIncome> sourcesOfIncome;
     @NotNull
     @ValidateCollection
-    private final Set<Expense> expenses;
+    @JsonProperty
+    private Set<Expense> expenses;
 
+    public FinanceData(){}
     public FinanceData(SourceOfIncome... sourcesOfIncome) {
         this.sourcesOfIncome = Arrays.asList(sourcesOfIncome);
         this.expenses = new HashSet<>();

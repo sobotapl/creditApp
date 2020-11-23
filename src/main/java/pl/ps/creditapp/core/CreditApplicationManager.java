@@ -7,7 +7,9 @@ import org.slf4j.MDC;
 import pl.ps.creditapp.core.model.CreditApplication;
 import pl.ps.creditapp.core.model.ProcessedCreditApplication;
 import pl.ps.creditapp.di.Inject;
+import pl.ps.creditapp.util.ObjectMapperService;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -33,7 +35,7 @@ public class CreditApplicationManager {
         queue.addFirst(creditApplication);
     }
 
-    public void startProcessing() {
+    public void startProcessing() throws IOException {
         while (!queue.isEmpty()) {
             CreditApplication creditApplication = queue.pollLast();
             log.info(String.format("Starting processing application with id %s", creditApplication.getId()));
@@ -44,13 +46,17 @@ public class CreditApplicationManager {
         }
     }
 
-    public void loadApplication(String id) {
-        final ProcessedCreditApplication read = fileManager.read(id);
+    public void loadApplication(String appId, String personId) throws IOException, ClassNotFoundException {
+        final ProcessedCreditApplication read = fileManager.read(appId,personId);
 
         try {
             log.info(ObjectMapperService.OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(read));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void init() throws IOException {
+        fileManager.init();
     }
 }

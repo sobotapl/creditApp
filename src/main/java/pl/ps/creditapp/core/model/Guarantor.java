@@ -1,5 +1,6 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
@@ -9,14 +10,17 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
 
-public class Guarantor implements Comparable<Guarantor> , Serializable {
-    public static final long serialVersionUID =1l;
+public class Guarantor implements Comparable<Guarantor>, Serializable {
+    public static final long serialVersionUID = 1l;
     @NotNull
     @Regex(Constants.PESEL_REGEX)
-    private final String pesel;
+    @JsonProperty
+    private String pesel;
     @NotNull
-    private final LocalDate birthDate;
+    @JsonProperty
+    private LocalDate birthDate;
 
+    public Guarantor(){}
     public Guarantor(String pesel, LocalDate birthDate) {
         this.pesel = pesel;
         this.birthDate = birthDate;

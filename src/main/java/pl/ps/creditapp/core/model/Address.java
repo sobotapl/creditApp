@@ -1,23 +1,30 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.annotation.NotNull;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Address implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
-    private final String street;
+    @JsonProperty
+    private String street;
     @NotNull
-    private final String city;
+    @JsonProperty
+    private String city;
     @NotNull
-    private final String zipCode;
+    @JsonProperty
+    private String zipCode;
     @NotNull
-    private final String state;
+    @JsonProperty
+    private String state;
     @NotNull
-    private final String houseNumber;
+    @JsonProperty
+    private String houseNumber;
 
+    public Address(){}
     public Address(String street, String city, String zipCode, String state, String houseNumber) {
         this.street = street;
         this.city = city;
@@ -35,6 +42,5 @@ public class Address implements Serializable {
                 state.equalsIgnoreCase(address.state) &&
                 houseNumber.equalsIgnoreCase(address.houseNumber);
     }
-
 
 }

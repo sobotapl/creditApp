@@ -1,5 +1,7 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
@@ -9,19 +11,25 @@ import java.io.Serializable;
 import java.util.Optional;
 
 public class ContactData implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
     @Regex(Constants.EMAIL_REGEX)
+    @JsonProperty
     private String email;
     @NotNull
     @Regex(Constants.PHONE_REGEX)
+    @JsonProperty
     private String phoneNumber;
     @NotNull
     @ValidateObject
+    @JsonProperty
     private Address homeAddress;
-    @NotNull
-    private transient Optional<Address> correspondenceAddress;
 
+    @JsonProperty
+    @JsonIgnore
+    private transient Optional<Address> correspondenceAddress = Optional.empty();
+
+    public ContactData(){}
     private ContactData(String email, String phoneNumber, Address homeAddress, Optional<Address> correspondenceAddress) {
         this.email = email;
         this.phoneNumber = phoneNumber;

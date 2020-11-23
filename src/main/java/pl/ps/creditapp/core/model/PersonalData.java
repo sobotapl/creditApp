@@ -1,5 +1,6 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
@@ -7,20 +8,27 @@ import pl.ps.creditapp.core.annotation.Regex;
 import java.io.Serializable;
 
 public class PersonalData implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
     @Regex(Constants.NAME_REGEX)
-    private final String name;
+    @JsonProperty
+    private String name;
     @NotNull
-    @Regex(Constants.NAME_REGEX)
-    private final String lastName;
+    @Regex(Constants.LAST_NAME_REGEX)
+    @JsonProperty
+    private String lastName;
     @NotNull
-    @Regex(Constants.NAME_REGEX)
-    private final String mothersMaidenName;
+    @Regex(Constants.LAST_NAME_REGEX)
+    @JsonProperty
+    private String mothersMaidenName;
     @NotNull
-    private final MaritalStatus maritalStatus;
+    @JsonProperty
+    private MaritalStatus maritalStatus;
     @NotNull
-    private final Education education;
+    @JsonProperty
+    private Education education;
+
+    public PersonalData(){}
 
     private PersonalData(String name, String lastName, String mothersMaidenName, MaritalStatus maritalStatus, Education education) {
         this.name = name;

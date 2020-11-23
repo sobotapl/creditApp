@@ -1,4 +1,5 @@
 package pl.ps.creditapp.core.model;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.ValidateCollection;
 import pl.ps.creditapp.core.annotation.ValidateObject;
@@ -10,19 +11,25 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Person implements Serializable {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
     @ValidateObject
-    private final PersonalData personalData;
+    @JsonProperty
+    private PersonalData personalData;
     @NotNull
     @ValidateObject
-    private final ContactData contactData;
+    @JsonProperty
+    private ContactData contactData;
     @NotNull
     @ValidateObject
-    private final FinanceData financeData;
+    @JsonProperty
+    private FinanceData financeData;
     @NotNull
     @ValidateCollection
-    private final List<FamilyMember> familyMembers;
+    @JsonProperty
+    private List<FamilyMember> familyMembers;
+
+    protected Person(){}
 
     protected Person(PersonalData personalData, ContactData contactData, FinanceData financeData, List<FamilyMember> familyMembers) {
         this.personalData = personalData;

@@ -1,5 +1,6 @@
 package pl.ps.creditapp.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.ps.creditapp.core.Constants;
 import pl.ps.creditapp.core.annotation.NotNull;
 import pl.ps.creditapp.core.annotation.Regex;
@@ -9,18 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NaturalPerson extends Person {
-    public static final long serialVersionUID =1l;
+    public static final long serialVersionUID = 1l;
     @NotNull
     @Regex(Constants.PESEL_REGEX)
-    private final String pesel;
+    @JsonProperty
+    private String pesel;
+
+    public NaturalPerson(){}
+    public String getPesel() {
+        return pesel;
+    }
 
     private NaturalPerson(String pesel, PersonalData personalData, ContactData contactData, FinanceData financeData, List<FamilyMember> familyMemberList) {
         super(personalData, contactData, financeData, familyMemberList);
         this.pesel = pesel;
-    }
-
-    public String getPesel() {
-        return pesel;
     }
 
     public static class Builder {
